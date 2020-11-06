@@ -1,55 +1,40 @@
 // Entry program
-const path = require("path");
-const yargs = require("yargs");
-// const { hideBin } = require("yargs/helpers");
-const { generateEpub } = require("./epub/epub");
-const { generatePDF } = require("./pdf");
+// require("./helpers/logger");
+require("dotenv").config();
+const { getCommandlineArgs, prepareCli } = require("./cli");
+const Renderer = require("./renderer");
 const { getTweetsFromTweetId } = require("./twitter");
+const { getOutputFilePath } = require("./utils/path");
+const { sendToKindle } = require("./utils/send-to-kindle");
+const { getTweet } = require("./twitter-puppeteer");
 
 async function main() {
-  const options = yargs(process.argv)
-    .usage("Usage: -i <tweet id> -f <file format> -o <filename>")
-    .option({
-      i: {
-        alias: "tweetId",
-        demandOption: true,
-        describe: "First tweet's tweet id in of the twitter thread",
-        type: "string",
-      },
-      f: {
-        alias: "format",
-        demandOption: false,
-        describe: "Output file format",
-        choices: ["mobi", "epub", "pdf"],
-        type: "string",
-        default: "pdf",
-      },
-      o: {
-        alias: "output",
-        demandOption: true,
-        describe: "Filename for the output file",
-        type: "string",
-      },
-    }).argv;
+  prepareCli();
+
+  const {
+    format,
+    outputFilename,
+    tweetId,
+    kindleEmail,
+    mock,
+    shouldUsePuppeteer,
+  } = getCommandlineArgs(process.argv);
 
   try {
-    const tweets = await getTweetsFromTweetId(options.tweetId);
-    /**
-     * Execute certain function on different format
-     */
-    const mappings = {
-      epub: async () => {},
+    // this next line is wrong
+    let tweets = require("./twitter/twitter_responses/response-version2-tweetthread.json");
+    if (!mock) {
+      if (shouldUsePuppeteer) tweets = await getTweet(tweetId);
+      else tweets = await getTweetsFromTweetId(tweetId);
+    }
 
-      pdf: async () => {
-        await generatePDF(tweets, `${process.cwd()}/${options.output}.pdf`);
-      },
+    const outputFilePath = getOutputFilePath(outputFilename);
 
-      mobi: async () => {},
-    };
+    await Renderer.render(tweets, format, outputFilePath);
 
-    const generatorFunc = mappings[options.format];
-
-    generatorFunc && (await generatorFunc());
+    if (kindleEmail) {
+      await sendToKindle(kindleEmail, outputFilePath);
+    }
   } catch (e) {
     console.error(e);
   }
