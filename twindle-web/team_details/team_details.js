@@ -1,52 +1,56 @@
-// import { data } from 'persons';
-
 const cards = document.querySelector(".card-gallery");
 
-function generateCard() {
+function generateCard(info) {
     return `
     <div class="card">
         <div class="card-heading">
           <img
-            src="https://avatars0.githubusercontent.com/u/37118877?v=4"
+            src=${info.img}
             class="image"
           />
-          <h2 class="name">Akshay Sharma</h2>
-          <h5 class="title">Front End Developer</h5>
+          <h2 class="name">${info.name}</h2>
+          <h5 class="title">${info.title}</h5>
         </div>
         <hr />
         <div class="card-links">
           <a
-            href="https://github.com/akshay2996"
+            href=${info.links.github}
             target="_blank"
             rel="noopener noreferrer"
             ><i class="fa fa-github fa-2x" aria-hidden="true"></i
           ></a>
           <a
-            href="https://twitter.com/akshay2996"
+            href=${info.links.twitter}
             target="_blank"
             rel="noopener noreferrer"
             ><i class="fa fa-twitter fa-2x" aria-hidden="true"></i
           ></a>
-          <a href="linkedin" target="_blank" rel="noopener noreferrer"
+          <a href=${info.links.linkedin} target="_blank" rel="noopener noreferrer"
             ><i class="fa fa-linkedin fa-2x" aria-hidden="true"></i
           ></a>
           <a
-            href="https://developeratease.com/"
+            href=${info.links.website}
             target="_blank"
             rel="noopener noreferrer"
             ><i class="fa fa-globe fa-2x" aria-hidden="true"></i
           ></a>
         </div>
         <div class="card-location">
-          <h5 class="location">Bangalore, Karnataka, India</h5>
+          <h5 class="location">${info.location.city} ${info.location.state} ${info.location.country}</h5>
         </div>
       </div>
     `;
 }
 
-const cardArray = Array.from({length: 7});
+async function pushToDom() {
+  let fetchData = await fetch('https://raw.githubusercontent.com/twindle-co/twindle/main/twindle-web/team_details/data.json');
+  let data = await fetchData.json();
+  let users = data.users;
+  let html = '';
+  users.forEach(info => html += generateCard(info)
+      )
+  cards.innerHTML = html;
+  }
 
-const html = cardArray.map(generateCard).join("");
-// console.log(html);
-cards.innerHTML = html;
-// console.log(cards.innerHTML);
+
+pushToDom();
