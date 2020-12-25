@@ -77,11 +77,11 @@ Initial code goes into twindle-cli
 ### 📺 Latest YouTube Videos
 
 <!-- YOUTUBE:START -->
+- [Twindle Live Stream](https://www.youtube.com/watch?v=JQzHl8W9sz8)
+- [Twindle Web](https://www.youtube.com/watch?v=gPyng7lP1vA)
 - [Twindle Live Stream](https://www.youtube.com/watch?v=I7eC9zKm1Cc)
 - [Twindle Live Stream](https://www.youtube.com/watch?v=LdC61PDqPTw)
 - [Twindle PDF Rendering](https://www.youtube.com/watch?v=3WdxnAOTZq0)
-- [Svelte Overview and Discussion](https://www.youtube.com/watch?v=tp5lYJdJ1XE)
-- [Twindle Hacker News Integration](https://www.youtube.com/watch?v=kX4ejOw46Vg)
 <!-- YOUTUBE:END -->
 
 ➡️ [more videos...](https://www.youtube.com/channel/UCKxUmbHq5P5pd5IyUiZ8MHA/videos)
